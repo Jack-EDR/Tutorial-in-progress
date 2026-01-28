@@ -1,0 +1,59 @@
+struct SwiftBank {
+  private let password: String
+  internal var initialDeposit: Double
+  internal var balance: Double = 0.0 {
+    didSet {
+        if balance < 100 {
+            displayLowBalanceMessage()
+        }
+    }
+}
+  static let depositBonusRate = 0.01
+  
+  init(password: String, initialDeposit: Double){
+    self.password = password
+    self.initialDeposit = 5.5
+  }
+  private func isValid(_ enterPassword: String) -> Bool{
+    if enterPassword == password {
+      return true
+    } else {
+      return false
+    }
+  }
+  private func finalDepositWithBonus(deposit: Double) -> Double {
+    return deposit + SwiftBank.depositBonusRate
+  }
+  mutating func makeDeposit(depositAmount: Double) -> Double {
+    let finalAmount = finalDepositWithBonus(deposit: depositAmount)
+    print("Making a deposit of $\(depositAmount) with a bonus rate. The final amount deposited is $\(finalAmount).")
+    self.balance += finalAmount
+    return balance
+  }
+  func displayBalance(password: String){
+    if isValid(password) {
+      print("Your current balance is $\(balance)")
+    } else {
+      print("Error: Invalid password. Cannot retrieve balance")
+    }
+  }
+  mutating func makeWithdrawal(withdrawalAmount: Double, password: String) {
+    guard isValid(password) else {
+        print("Error: Invalid password. Cannot make withdrawal.")
+        return
+    }
+    balance -= withdrawalAmount
+    print("Making a $\(withdrawalAmount) withdrawal")
+  }
+  private func displayLowBalanceMessage() {
+    print("Alert: Your balance is under $100.")
+  }
+}
+var myAccount = SwiftBank(password: "pass1", initialDeposit: 500)
+  print(myAccount.balance)
+  _ = myAccount.makeDeposit(depositAmount: 50.0)
+  myAccount.makeWithdrawal(withdrawalAmount: 100,
+password: "pass1")
+  myAccount.displayBalance(password: "pass1")
+
+// initialDeposit to be FIXED!
